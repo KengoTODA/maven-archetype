@@ -81,6 +81,7 @@ public class DefaultArchetypeSelectionQueryer
 
             Set<String> archetypeKeys = new HashSet<>();
             List<String> answers = new ArrayList<>();
+            List<String> lines = new ArrayList<>();
             Map<String, Archetype> archetypeAnswerMap = new HashMap<>();
 
             int counter = 0;
@@ -108,10 +109,11 @@ public class DefaultArchetypeSelectionQueryer
                     }
 
                     String answer = String.valueOf( counter );
+                    String line = answer + ": " + catalog + " -> " + archetype.getGroupId() + ":"
+                            + archetype.getArtifactId() + " (" + description + ")\n";
 
-                    query.append( answer + ": " + catalog + " -> " + archetype.getGroupId() + ":"
-                        + archetype.getArtifactId() + " (" + description + ")\n" );
-
+                    query.append( line );
+                    lines.add( line );
                     answers.add( answer );
 
                     archetypeAnswerMap.put( answer, archetype );
@@ -135,16 +137,21 @@ public class DefaultArchetypeSelectionQueryer
             String answer;
             if ( defaultSelection == 0 )
             {
-                answer = prompter.prompt( query.toString() );
+                answer = prompter.prompt( query.toString(), lines );
             }
             else
             {
-                answer = prompter.prompt( query.toString(), Integer.toString( defaultSelection ) );
+                answer = prompter.prompt( query.toString(), lines, Integer.toString( defaultSelection ) );
             }
 
             if ( NumberUtils.isNumber( answer ) )
             {
                 selection = archetypeAnswerMap.get( answer );
+            }
+            else if ( lines.contains( answer ) )
+            {
+                String number = answer.substring( 0, answer.indexOf( ": " ) );
+                selection = archetypeAnswerMap.get( number );
             }
             else
             {

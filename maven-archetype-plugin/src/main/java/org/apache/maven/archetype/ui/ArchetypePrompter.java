@@ -19,6 +19,9 @@ package org.apache.maven.archetype.ui;
  * under the License.
  */
 
+import java.io.IOException;
+import java.util.List;
+
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.components.interactivity.InputHandler;
@@ -27,8 +30,7 @@ import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.io.IOException;
-import java.util.List;
+import jline.console.ConsoleReader;
 
 /**
  * @author raphaelpieroni
@@ -82,7 +84,7 @@ public class ArchetypePrompter
         {
             writePrompt( formattedMessage );
 
-            line = readLine();
+            line = readLine( possibleValues );
 
             if ( StringUtils.isEmpty( line ) )
             {
@@ -153,6 +155,32 @@ public class ArchetypePrompter
         throws PrompterException
     {
         showMessage( message + ": " );
+    }
+
+    private String readLine( List<String> candidates )
+        throws PrompterException
+    {
+        try
+        {
+            final ConsoleReader reader = new ConsoleReader();
+            try
+            {
+                reader.addCompleter( new PartialMatchCompleter( candidates ) );
+                return reader.readLine();
+            }
+            catch ( IOException e )
+            {
+                throw new PrompterException( "Failed to read user response", e );
+            }
+            finally
+            {
+                reader.close();
+            }
+        }
+        catch ( IOException e )
+        {
+            throw new PrompterException( "Failed to read user response", e );
+        }
     }
 
     private String readLine()
