@@ -160,6 +160,32 @@ public class DefaultArchetypeSelectionQueryerTest
         assertEquals( "set-version", archetype.getVersion() );
     }
 
+    public void testAutoCompletedResult()
+        throws PrompterException
+    {
+        Map<String, List<Archetype>> map = createDefaultArchetypeCatalog();
+
+        MockControl control = MockControl.createControl( Prompter.class );
+        Prompter prompter = (Prompter) control.getMock();
+        prompter.prompt( "", Arrays.asList(
+            "1: internal -> set-groupId:set-artifactId (-)", 
+            "2: internal -> default-groupId:default-artifactId (-)") );
+        control.setMatcher( createArgumentMatcher() );
+        // the completed result has trailing space
+        control.setReturnValue( "1: internal -> set-groupId:set-artifactId (-) " );
+        queryer.setPrompter( prompter );
+
+        control.replay();
+
+        Archetype archetype = queryer.selectArchetype( map );
+
+        control.verify();
+
+        assertEquals( "set-groupId", archetype.getGroupId() );
+        assertEquals( "set-artifactId", archetype.getArtifactId() );
+        assertEquals( "set-version", archetype.getVersion() );
+    }
+
     public void testArchetypeFiltering()
         throws PrompterException
     {
