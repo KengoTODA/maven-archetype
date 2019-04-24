@@ -110,9 +110,9 @@ public class DefaultArchetypeSelectionQueryer
 
                     String answer = String.valueOf( counter );
                     String line = answer + ": " + catalog + " -> " + archetype.getGroupId() + ":"
-                            + archetype.getArtifactId() + " (" + description + ")\n";
+                            + archetype.getArtifactId() + " (" + description + ")";
 
-                    query.append( line );
+                    query.append( line ).append( "\n" );
                     lines.add( line );
                     answers.add( answer );
 
@@ -148,7 +148,7 @@ public class DefaultArchetypeSelectionQueryer
             {
                 selection = archetypeAnswerMap.get( answer );
             }
-            else if ( lines.contains( answer ) )
+            else if ( lines.contains( answer.trim() ) )
             {
                 String number = answer.substring( 0, answer.indexOf( ": " ) );
                 selection = archetypeAnswerMap.get( number );
