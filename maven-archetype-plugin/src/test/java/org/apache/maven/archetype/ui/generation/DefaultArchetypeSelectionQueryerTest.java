@@ -29,6 +29,7 @@ import org.easymock.ArgumentsMatcher;
 import org.easymock.MockControl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,9 @@ public class DefaultArchetypeSelectionQueryerTest
 
         MockControl control = MockControl.createControl( Prompter.class );
         Prompter prompter = (Prompter) control.getMock();
-        prompter.prompt( "", "2" );
+        prompter.prompt( "", Arrays.asList(
+                "1: internal -> set-groupId:set-artifactId (-)", 
+                "2: internal -> default-groupId:default-artifactId (-)") , "2" );
         control.setMatcher( createArgumentMatcher() );
         control.setReturnValue( "1" );
         queryer.setPrompter( prompter );
@@ -81,7 +84,9 @@ public class DefaultArchetypeSelectionQueryerTest
 
         MockControl control = MockControl.createControl( Prompter.class );
         Prompter prompter = (Prompter) control.getMock();
-        prompter.prompt( "", "2" );
+        prompter.prompt( "", Arrays.asList(
+                "1: internal -> set-groupId:set-artifactId (-)", 
+                "2: internal -> default-groupId:default-artifactId (-)"), "2" );
         control.setMatcher( createArgumentMatcher() );
         control.setReturnValue( "2" );
         queryer.setPrompter( prompter );
@@ -108,7 +113,9 @@ public class DefaultArchetypeSelectionQueryerTest
 
         MockControl control = MockControl.createControl( Prompter.class );
         Prompter prompter = (Prompter) control.getMock();
-        prompter.prompt( "" );
+        prompter.prompt( "", Arrays.asList(
+                "1: internal -> set-groupId:set-artifactId (-)", 
+                "2: internal -> default-groupId:default-artifactId (-)") );
         control.setMatcher( createArgumentMatcher() );
         control.setReturnValue( "1" );
         queryer.setPrompter( prompter );
@@ -135,7 +142,9 @@ public class DefaultArchetypeSelectionQueryerTest
 
         MockControl control = MockControl.createControl( Prompter.class );
         Prompter prompter = (Prompter) control.getMock();
-        prompter.prompt( "" );
+        prompter.prompt( "", Arrays.asList(
+            "1: internal -> set-groupId:set-artifactId (-)", 
+            "2: internal -> default-groupId:default-artifactId (-)") );
         control.setMatcher( createArgumentMatcher() );
         control.setReturnValue( "1" );
         queryer.setPrompter( prompter );
@@ -158,10 +167,13 @@ public class DefaultArchetypeSelectionQueryerTest
 
         MockControl control = MockControl.createControl( Prompter.class );
         Prompter prompter = (Prompter) control.getMock();
-        prompter.prompt( "" );
+        prompter.prompt( "", Arrays.asList(
+                "1: internal -> set-groupId:set-artifactId (-)", 
+                "2: internal -> default-groupId:default-artifactId (-)" ) );
         control.setMatcher( createArgumentMatcher() );
         control.setReturnValue( "set-artifactId" );
-        prompter.prompt( "" );
+        prompter.prompt( "", Arrays.asList(
+                "1: internal -> set-groupId:set-artifactId (-)" )  );
         control.setReturnValue( "1" );
         queryer.setPrompter( prompter );
 
