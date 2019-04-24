@@ -103,7 +103,7 @@ public class ArchetypePrompter
                 }
             }
         }
-        while ( line == null || !possibleValues.contains( line ) );
+        while ( line == null );
 
         return line;
     }
