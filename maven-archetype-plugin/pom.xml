@@ -42,6 +42,7 @@
 
   <properties>
     <checkstyle.violation.ignore>RedundantThrows,NewlineAtEndOfFile,ParameterNumber,MethodLength,FileLength,javadoc,LineLength</checkstyle.violation.ignore>
+    <jline.version>3.11.0</jline.version>
   </properties>
 
   <prerequisites>
@@ -132,9 +133,14 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>jline</groupId>
-      <artifactId>jline</artifactId>
-      <version>2.14.6</version>
+      <groupId>org.jline</groupId>
+      <artifactId>jline-terminal</artifactId>
+      <version>${jline.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jline</groupId>
+      <artifactId>jline-reader</artifactId>
+      <version>${jline.version}</version>
     </dependency>
   </dependencies>
 

@@ -29,8 +29,13 @@ import org.codehaus.plexus.components.interactivity.OutputHandler;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.codehaus.plexus.util.StringUtils;
-
-import jline.console.ConsoleReader;
+import org.jline.reader.EndOfFileException;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 /**
  * @author raphaelpieroni
@@ -162,19 +167,27 @@ public class ArchetypePrompter
     {
         try
         {
-            final ConsoleReader reader = new ConsoleReader();
+            Terminal terminal = TerminalBuilder.terminal();
+            LineReader lineReader = LineReaderBuilder.builder()
+                    .completer( new StringsCompleter( candidates ) )
+                    .terminal( terminal )
+                    .build();
+
             try
             {
-                reader.addCompleter( new PartialMatchCompleter( candidates ) );
-                return reader.readLine();
+                return lineReader.readLine();
             }
-            catch ( IOException e )
+            catch ( EndOfFileException e )
+            {
+                throw new PrompterException( "Failed to read user response", e );
+            }
+            catch ( UserInterruptException e )
             {
                 throw new PrompterException( "Failed to read user response", e );
             }
             finally
             {
-                reader.close();
+                terminal.close();
             }
         }
         catch ( IOException e )
